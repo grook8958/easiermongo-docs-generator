@@ -29,8 +29,8 @@ exports.returnComments = (data) => {
         const line = lnArray[comment.loc.end.line];
         let parent;
         if (line.includes('constructor')) parent = { type: 'Constructor', name: null }
-        else if (Constants.METHOD_REGEX.test(line) && !line.trim().startsWith('get ')) parent = { type: 'Method', name: line.match(Constants.METHOD_REGEX)[0].trim().replace('(', '')}
         else if (Constants.PROPERTY_REGEX.test(line)) parent = { type: 'Property', name: line.match(Constants.PROPERTY_REGEX)[0].trim().replace('this.', '')}
+        else if (Constants.METHOD_REGEX.test(line) && !line.trim().startsWith('get ') && !comment.value.includes('@private')) parent = { type: 'Method', name: line.match(Constants.METHOD_REGEX)[0].trim().replace('(', '')}
         else if (line.trim().startsWith('get ')) parent = { type: 'Getter', name: line.match(Constants.GETTER_REGEX)[1]}
 
         comment.parent = parent;
