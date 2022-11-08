@@ -82,8 +82,8 @@ exports.resolveType = (string) => {
     if (string.startsWith('\'')) return string;
     if (Number(string) && !Number.isNaN(Number(string))) {
         return Number(string);
-    } else if (string === '{}') {
-        return {};
+    } else if (string === {}) {
+        return String({});
     } else if (boolConvert[string]) {
         return boolConvert[string];
     } else {
