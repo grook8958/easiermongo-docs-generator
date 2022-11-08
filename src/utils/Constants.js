@@ -17,6 +17,7 @@ exports.EXTEND_CLASS_REGEX = /extends\ (\w+)/m;
 exports.CLASS_NAME_REGEX = /class\ (\w+)/m;
 exports.DESCRIPTION_WARN_MARKER = '{!}';
 exports.METHOD_EXAMPLE_REGEX = /(@example)/gm;
+exports.MINI_CODE_BLOCK_TEXT_REGEX = /\`(?<text>.*?)\`/gm;
 
 exports.CHECKMARK_SVG_HTML = '<svg preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24" width="1.2em" height="1.2em" class="h-5 w-5 mx-auto" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m5 13l4 4L19 7"></path></svg>';
 
@@ -36,7 +37,9 @@ exports.EXTERNAL_URL_MAPPER = {
     null: 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/null',
     void: 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/void',
 
-    EventEmitter: 'https://nodejs.org/dist/latest/docs/api/events.html#events_class_eventemitter',
+    eventemitter: 'https://nodejs.org/dist/latest/docs/api/events.html#events_class_eventemitter',
+    model: 'https://mongoosejs.com/docs/api/model.html',
+    collection: 'https://discord.js.org/#/docs/collection/main/class/Collection',
 };
 
 exports.baseURL__v2 = 'https://easiermongo.js.org/docs/v2';
