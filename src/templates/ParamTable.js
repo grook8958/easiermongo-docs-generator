@@ -40,7 +40,7 @@ exports.parseVars__paramListTemplate__optional = (paramName, paramTypeLink, para
     parsed = replaceAll(parsed, '[param-type-link]', paramTypeLink);
     parsed = replaceAll(parsed, '[param-description]', paramDescription);
     parsed = replaceAll(parsed, '[param-is-optional]', paramIsOptional ? CHECKMARK_SVG_HTML : '');
-    parsed = replaceAll(parsed, '[param-default]', paramDefault ? MiniCodeBlock.parseVars(`${paramDefault.value}`) : '');
+    parsed = replaceAll(parsed, '[param-default]', paramDefault ? MiniCodeBlock.parseVars(String(paramDefault)) : '');
     return parsed;
 }
 

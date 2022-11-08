@@ -57,13 +57,7 @@ exports.writeFile = (fileName, data, outDir) => {
  * @property {string} description
  * @property {string} type
  * @property {true} optional 
- * @property {DefaultValue} default
- */
-
-/**
- * @typedef {Object} DefaultValue
- * @property {any} value
- * @property {string} type
+ * @property {string} default
  */
 
 /**
