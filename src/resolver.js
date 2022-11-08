@@ -41,7 +41,7 @@ exports.resolveCommentData = (comments, data) => {
                     let defaultValue = null;
                     const paramFunc = getBetween(lnData[comment.loc.end.line], '(', ')').split(',')[matches.indexOf(match)].trim()
                         if (paramFunc.includes('=')) {
-                            if (getAfter(paramFunc, '=')) {isOptional = true; defaultValue = { value: resolveType(getAfter(paramFunc, '=').trim())}}
+                            if (getAfter(paramFunc, '=')) {isOptional = true; defaultValue = resolveType(getAfter(paramFunc, '=').trim())}
                         }   
                         
                     const split = match.split(' ')
@@ -74,7 +74,6 @@ exports.resolveCommentData = (comments, data) => {
                     return example =  split.slice(split.indexOf(match[0]) + 1).join('\n')
                 }
             });
-
             methods.push({
                 name: methodName,
                 description: description,
