@@ -1,10 +1,9 @@
 const fs = require('fs');
 const path = require('path');
 const indent = require('indent.js');
-const { Class: ClassTemplate, Property: PropertyTemplate, Link, Warn, Method: MethodTemplate, ParamTable, Class, Getter, Constructor } = require('./templates');
-const { OUT_DIR, FOUR_SPACE } = require('./utils/Constants');
+const { Class: ClassTemplate, Property: PropertyTemplate, Link, Warn, Method: MethodTemplate, ParamTable, Getter, Constructor, MiniCodeBlock } = require('./templates');
+const { OUT_DIR, FOUR_SPACE, MINI_CODE_BLOCK_TEXT_REGEX } = require('./utils/Constants');
 const { highlight } = require('./utils/Util');
-const { docs } = require('./utils/DocumentURLMapper');
 
 /**
  * Output a file
@@ -99,7 +98,7 @@ exports.generate = (docsData) => {
     const HTMLPropertiesList = [];
     const HTMLProperties = docsData.properties.map(property => {
         HTMLPropertiesList.push(PropertyTemplate.parseVars__list(property.name));
-        return PropertyTemplate.parseVars(property.name, this.parseDescription(property.description), Link.new(property.type))
+        return PropertyTemplate.parseVars(property.name, this.parseDescription(property.description), new Link(property.type).link)
     });
 
     //Parse the methods
@@ -108,22 +107,22 @@ exports.generate = (docsData) => {
         HTMLMethodsList.push(MethodTemplate.parseVars__list(method.name));
         if (method.params.length > 0) {
             if (method.example) {
-                return MethodTemplate.parseVars__example(method.name, MethodTemplate.parseVars__paramListTemplate(this.getParamsName(method.params)), this.parseDescription(method.description), this.createParamTable(method.params), Link.new(method.returns), highlight(method.example), { static: method.isStatic, readonly: null });
+                return MethodTemplate.parseVars__example(method.name, MethodTemplate.parseVars__paramListTemplate(this.getParamsName(method.params)), this.parseDescription(method.description), this.createParamTable(method.params), new Link(method.returns).link, highlight(method.example), { static: method.isStatic, readonly: null });
             } else {
-                return MethodTemplate.parseVars(method.name, MethodTemplate.parseVars__paramListTemplate(this.getParamsName(method.params)), this.parseDescription(method.description), this.createParamTable(method.params), Link.new(method.returns), { static: method.isStatic, readonly: null });
+                return MethodTemplate.parseVars(method.name, MethodTemplate.parseVars__paramListTemplate(this.getParamsName(method.params)), this.parseDescription(method.description), this.createParamTable(method.params), new Link(method.returns).link, { static: method.isStatic, readonly: null });
             }
         } else {
             if (method.example) {
-                return MethodTemplate.parseVars__noparams__example(method.name, this.parseDescription(method.description), Link.new(method.returns), highlight(method.example), { static: method.isStatic, readonly: null });
+                return MethodTemplate.parseVars__noparams__example(method.name, this.parseDescription(method.description), new Link(method.returns).link, highlight(method.example), { static: method.isStatic, readonly: null });
             } else {
-                return MethodTemplate.parseVars__noparams(method.name, this.parseDescription(method.description), Link.new(method.returns), { static: method.isStatic, readonly: null });
+                return MethodTemplate.parseVars__noparams(method.name, this.parseDescription(method.description), new Link(method.returns).link, { static: method.isStatic, readonly: null });
             }
         }
     });
 
     //Parse the getters
     docsData.getters.forEach(getter => {
-        HTMLProperties.push(Getter.parseVars(getter.name, getter.description, Link.new(getter.type)));
+        HTMLProperties.push(Getter.parseVars(getter.name, getter.description, new Link(getter.type)));
         HTMLPropertiesList.push(Getter.parseVars__list(getter.name));
     });
 
@@ -184,13 +183,19 @@ exports.mergeHTMLData = (HTMLData) => {
  * @param {string} description
  */
 exports.parseDescription = (description) => {
-    if (!description.includes('{!}')) return description;
+    if (!description.includes('{!}' || !description.includes('`'))) return description;
     const split = description.split('\n');
     for (const item of split) {
         if (item.startsWith('{!}')) {
-            return description.replace(item, `${FOUR_SPACE}${Warn.parseVars(item.replace('{!} ', ''))}`);
+            description = description.replace(item, `${FOUR_SPACE}${Warn.parseVars(item.replace('{!} ', ''))}`);
         }
     }
+    const matches = [...description.matchAll(MINI_CODE_BLOCK_TEXT_REGEX)];
+    for (const match of matches) {
+        description = description.replace(match[0], MiniCodeBlock.parseVars(match[1]));
+    }
+
+    return description
 }
 
 /**
@@ -220,9 +225,9 @@ exports.createParamTable = (params) => {
     if (params.find(item => item.optional === true)) isOptional = true;
     for (const param of params) {
         if (isOptional) {
-            paramList.push(ParamTable.parseVars__paramListTemplate__optional(param.name, Link.new(param.type), param.description, param.optional, param.default));
+            paramList.push(ParamTable.parseVars__paramListTemplate__optional(param.name, new Link(param.type).link, param.description, param.optional, param.default));
         } else {
-            paramList.push(ParamTable.parseVars__paramListTemplate(param.name, Link.new(param.type), param.description));
+            paramList.push(ParamTable.parseVars__paramListTemplate(param.name, new Link(param.type).link, param.description));
         }
     }
     if (isOptional) {
