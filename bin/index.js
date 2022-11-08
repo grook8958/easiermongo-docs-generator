@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 const path = require('path');
+const { IN_DIR } = require('../src/utils/Constants');
 const args = process.argv;
 args.shift();
 args.shift();
@@ -14,7 +15,7 @@ for (const arg of args) {
     if (arg === '-o' || arg === '--out') outDir = args[args.indexOf(arg) + 1];
 }
 console.log('Generating documents...')
-console.log('Reading ', path.resolve(dir));
+console.log('Reading ', path.resolve(dir || IN_DIR));
 try {
     require('../src/index').docGen(dir, outDir);
 } catch (err) {
