@@ -1,7 +1,7 @@
 {
     "name": "easiermongo-docs-generator",
     "version": "1.0.1",
-    "description": "",
+    "description": "A documentation generator for the package easiermongo",
     "main": "src/index.js",
     "bin": {
         "docgen": "./bin/index.js"
@@ -9,8 +9,8 @@
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1"
     },
-    "keywords": [],
-    "author": "",
+    "keywords": ["docs", "generator", "easiermongo"],
+    "author": "grook8958",
     "license": "ISC",
     "dependencies": {
         "extract-comments": "^1.1.0",
